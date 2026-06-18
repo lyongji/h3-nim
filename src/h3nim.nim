@@ -13,6 +13,7 @@ when defined(windows):
 elif defined(macosx) or defined(linux):
   {.passL: "-lm".}
 
+{.passC: "-I" & currentSourcePath.parentDir / ".." / "include".}
 {.passC: "-I" & currentSourcePath.parentDir / ".." / "h3" / "src" / "h3lib" / "include".}
 
 # 注册所有 H3 C 源文件

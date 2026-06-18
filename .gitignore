@@ -1,0 +1,8 @@
+# Nim build artifacts
+nimcache/
+*.o
+*.exe
+
+# Editor / OS
+.DS_Store
+*.swp

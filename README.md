@@ -198,6 +198,7 @@ cd ..
 
 - **Nim** ≥ 2.2.10
 - **C 编译器**（GCC / Clang / MSVC）
+- **git submodule** — `git submodule update --init` 拉取 H3 C 源码
 - **无**外部库依赖 — H3 C 源码随包编译
 
 ### 平台
