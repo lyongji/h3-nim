@@ -1,6 +1,6 @@
 # Package
 
-version       = "0.1.0"
+version       = "0.2.0"
 author        = "lyj"
 description   = "Uber H3 六边形地理索引系统 Nim 绑定 (v4.5.0)"
 license       = "Apache-2.0"
