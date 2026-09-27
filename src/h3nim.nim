@@ -150,8 +150,14 @@ const
 
 template `$`*(idx: H3索引): string = $(uint64(idx))
 template `==`*(a, b: H3索引): bool = uint64(a) == uint64(b)
-template `$`*(err: H3错误): string = $(uint32(err))
 template `==`*(a, b: H3错误): bool = uint32(a) == uint32(b)
+# 允许 H3错误 与 H3错误码 直接比较，如 `错误 == 成功`
+template `==`*(a: H3错误, b: H3错误码): bool = uint32(a) == uint32(b)
+template `==`*(a: H3错误码, b: H3错误): bool = uint32(a) == uint32(b)
+
+proc 是否成功*(错误: H3错误): bool =
+  ## 错误码是否为「成功」（0）
+  uint32(错误) == 0
 
 proc 经纬度转度*(经纬: 经纬度): (float64, float64) =
   ## 将弧度经纬度转为角度度
@@ -165,6 +171,10 @@ proc 度转经纬度*(纬度度, 经度度: float64): 经纬度 =
 
 # 描述错误
 proc 描述H3错误*(错误: H3错误): cstring {.cdecl, importc: "describeH3Error".}
+
+template `$`*(错误: H3错误): string =
+  ## 返回错误码的可读描述（等价于 `$描述H3错误(错误)`）
+  $描述H3错误(错误)
 
 # 经纬度 ↔ 单元
 proc 经纬度转单元*(经纬: ptr 经纬度, 分辨率: cint, 输出: ptr H3索引): H3错误 {.
@@ -424,7 +434,7 @@ proc 单元转经纬度*(单元: H3索引): 经纬度 =
 proc 单元转字符串*(单元: H3索引): string =
   var 缓冲区: array[17, char]
   let 结果 = 单元转字符串原(单元, cast[cstring](addr 缓冲区[0]), 17)
-  if 结果 == H3错误(0):
+  if 结果 == 成功:
     result = $cast[cstring](addr 缓冲区[0])
 
 proc 字符串转单元*(字符串: string): H3索引 =
@@ -452,7 +462,7 @@ proc 是否有效顶点*(顶点: H3索引): bool =
 
 proc 是否相邻单元*(原点, 目标: H3索引): bool =
   var 结果: cint
-  if 是否相邻单元原(原点, 目标, addr 结果) == H3错误(0):
+  if 是否相邻单元原(原点, 目标, addr 结果) == 成功:
     结果 != 0
   else:
     false
@@ -498,7 +508,7 @@ when isMainModule:
 
   # k-ring
   var 邻居: array[7, H3索引]
-  if 网格圆盘(单元, 1, addr 邻居[0]) == H3错误(0):
+  if 网格圆盘(单元, 1, addr 邻居[0]) == 成功:
     echo "1-ring: ", 邻居.len, " 个单元"
     for i, 邻 in 邻居.pairs:
       if 邻 != H3空:
