@@ -287,7 +287,7 @@ proc 单元转字符串原*(单元: H3索引, 字符串: cstring, 大小: csize_
 
 # 有效性
 proc 是否有效单元原*(单元: H3索引): cint {.cdecl, importc: "isValidCell".}
-proc 是否有效索引*(索引: H3索引): cint {.cdecl, importc: "isValidIndex".}
+proc 是否有效索引原*(索引: H3索引): cint {.cdecl, importc: "isValidIndex".}
 
 # 层级
 proc 单元转父级*(单元: H3索引, 父级分辨率: cint,
@@ -332,13 +332,13 @@ proc 获取二十面体面*(单元: H3索引, 输出: ptr cint): H3错误 {.
     cdecl, importc: "getIcosahedronFaces".}
 
 # 邻接
-proc 是否相邻单元*(原点, 目标: H3索引, 输出: ptr cint): H3错误 {.
+proc 是否相邻单元原*(原点, 目标: H3索引, 输出: ptr cint): H3错误 {.
     cdecl, importc: "areNeighborCells".}
 
 # 有向边
 proc 单元转有向边*(原点, 目标: H3索引, 输出: ptr H3索引): H3错误 {.
     cdecl, importc: "cellsToDirectedEdge".}
-proc 是否有效有向边*(边: H3索引): cint {.
+proc 是否有效有向边原*(边: H3索引): cint {.
     cdecl, importc: "isValidDirectedEdge".}
 proc 获取有向边起点*(边: H3索引, 输出: ptr H3索引): H3错误 {.
     cdecl, importc: "getDirectedEdgeOrigin".}
@@ -360,7 +360,7 @@ proc 单元转顶点集*(原点: H3索引, 顶点集: ptr H3索引): H3错误 {.
     cdecl, importc: "cellToVertexes".}
 proc 顶点转经纬度*(顶点: H3索引, 点: ptr 经纬度): H3错误 {.
     cdecl, importc: "vertexToLatLng".}
-proc 是否有效顶点*(顶点: H3索引): cint {.
+proc 是否有效顶点原*(顶点: H3索引): cint {.
     cdecl, importc: "isValidVertex".}
 
 # 网格路径
@@ -440,6 +440,22 @@ proc 是否五边形*(单元: H3索引): bool =
 
 proc 是否三级类*(单元: H3索引): bool =
   是否三级类原(单元) != 0
+
+proc 是否有效索引*(索引: H3索引): bool =
+  是否有效索引原(索引) != 0
+
+proc 是否有效有向边*(边: H3索引): bool =
+  是否有效有向边原(边) != 0
+
+proc 是否有效顶点*(顶点: H3索引): bool =
+  是否有效顶点原(顶点) != 0
+
+proc 是否相邻单元*(原点, 目标: H3索引): bool =
+  var 结果: cint
+  if 是否相邻单元原(原点, 目标, addr 结果) == H3错误(0):
+    结果 != 0
+  else:
+    false
 
 proc 获取分辨率*(单元: H3索引): int =
   获取分辨率原(单元).int
