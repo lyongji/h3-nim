@@ -140,6 +140,11 @@ type
     单元迭代*: 迭代多边形紧凑
     子迭代*: 迭代子单元
 
+  H3异常* = object of CatchableError
+    ## H3 调用失败时由去错误化的便捷封装抛出。
+    ## `错误` 保存原始错误码，可用 `描述H3错误` 获取可读信息。
+    错误*: H3错误
+
 # ── 常量 ──
 
 const
@@ -175,6 +180,15 @@ proc 描述H3错误*(错误: H3错误): cstring {.cdecl, importc: "describeH3Err
 template `$`*(错误: H3错误): string =
   ## 返回错误码的可读描述（等价于 `$描述H3错误(错误)`）
   $描述H3错误(错误)
+
+proc 新建H3异常(错误: H3错误): ref H3异常 =
+  result = newException(H3异常, "H3 错误 " & $(uint32(错误)) & ": " & $错误)
+  result.错误 = 错误
+
+proc 检查错误*(错误: H3错误) {.inline.} =
+  ## 错误码非「成功」时抛出 `H3异常`。
+  if 错误 != 成功:
+    raise 新建H3异常(错误)
 
 # 经纬度 ↔ 单元
 proc 经纬度转单元*(经纬: ptr 经纬度, 分辨率: cint, 输出: ptr H3索引): H3错误 {.
@@ -422,25 +436,22 @@ proc 销毁多边形迭代*(迭代: ptr 迭代多边形) {.
 # ── Nim 便捷封装 ──────────────────────────
 
 proc 经纬度转单元*(经纬: 经纬度, 分辨率: int): H3索引 =
-  var 输出: H3索引
-  discard 经纬度转单元(addr 经纬, 分辨率.cint, addr 输出)
-  输出
+  ## 失败时抛出 `H3异常`；需要错误码请改用底层指针重载。
+  检查错误(经纬度转单元(addr 经纬, 分辨率.cint, addr result))
 
 proc 单元转经纬度*(单元: H3索引): 经纬度 =
-  var 输出: 经纬度
-  discard 单元转经纬度(单元, addr 输出)
-  输出
+  ## 失败时抛出 `H3异常`。
+  检查错误(单元转经纬度(单元, addr result))
 
 proc 单元转字符串*(单元: H3索引): string =
+  ## 失败时抛出 `H3异常`（正常不会失败）。
   var 缓冲区: array[17, char]
-  let 结果 = 单元转字符串原(单元, cast[cstring](addr 缓冲区[0]), 17)
-  if 结果 == 成功:
-    result = $cast[cstring](addr 缓冲区[0])
+  检查错误(单元转字符串原(单元, cast[cstring](addr 缓冲区[0]), 17))
+  result = $cast[cstring](addr 缓冲区[0])
 
 proc 字符串转单元*(字符串: string): H3索引 =
-  var 输出: H3索引
-  discard 字符串转单元(字符串.cstring, addr 输出)
-  输出
+  ## 解析失败时抛出 `H3异常`。
+  检查错误(字符串转单元(字符串.cstring, addr result))
 
 proc 是否有效单元*(单元: H3索引): bool =
   是否有效单元原(单元) != 0
@@ -471,14 +482,12 @@ proc 获取分辨率*(单元: H3索引): int =
   获取分辨率原(单元).int
 
 proc 单元转父级*(单元: H3索引, 父级分辨率: int): H3索引 =
-  var 父: H3索引
-  discard 单元转父级(单元, 父级分辨率.cint, addr 父)
-  父
+  ## 失败时抛出 `H3异常`。
+  检查错误(单元转父级(单元, 父级分辨率.cint, addr result))
 
 proc 单元转中心子级*(单元: H3索引, 子级分辨率: int): H3索引 =
-  var 子: H3索引
-  discard 单元转中心子级(单元, 子级分辨率.cint, addr 子)
-  子
+  ## 失败时抛出 `H3异常`。
+  检查错误(单元转中心子级(单元, 子级分辨率.cint, addr result))
 
 # ── 演示/自检 ──
 

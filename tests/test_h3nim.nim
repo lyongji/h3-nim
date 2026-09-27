@@ -133,6 +133,28 @@ proc 近似相等(a, b: float64, 容差 = 1e-6): bool = abs(a - b) < 容差
   assert not 是否成功(域错误码)
   assert $域错误码 == $描述H3错误(域错误码), "$错误 应返回可读描述"
 
+测试 "值封装失败抛 H3异常":
+  var 捕获 = false
+  try:
+    discard 字符串转单元("not-a-valid-h3-index")
+  except H3异常 as e:
+    捕获 = true
+    assert e.错误 == H3错误码.失败, &"期望失败，实际 {e.错误}"
+  assert 捕获, "非法字符串应抛出 H3异常"
+
+  捕获 = false
+  try:
+    discard 经纬度转单元(度转经纬度(0.0, 0.0), 99)
+  except H3异常 as e:
+    捕获 = true
+    assert e.错误 == 分辨率域错误, &"期望分辨率域错误，实际 {e.错误}"
+  assert 捕获, "非法分辨率应抛出 H3异常"
+
+  # 合法输入不抛异常
+  let 单元 = 字符串转单元("8928308280fffff")
+  assert 单元 != H3空
+  assert 单元转字符串(单元) == "8928308280fffff"
+
 # ── 结果 ──
 
 echo &"\n测试完成: {通过} 通过, {失败} 失败"
