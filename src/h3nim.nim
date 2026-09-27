@@ -140,15 +140,6 @@ type
     单元迭代*: 迭代多边形紧凑
     子迭代*: 迭代子单元
 
-  迭代高斯珀边* {.bycopy, pure.} = object
-    边*: H3索引
-    剩余*: int64
-    边位置*: int8
-    步进位置*: array[16, int8]  # MAX_H3_RES + 1 = 16
-    父级分辨率*: int8
-    子级分辨率*: int8
-    是否五边形*: bool
-
 # ── 常量 ──
 
 const
@@ -417,11 +408,6 @@ proc 步进多边形迭代*(迭代: ptr 迭代多边形) {.
     cdecl, importc: "iterStepPolygon".}
 proc 销毁多边形迭代*(迭代: ptr 迭代多边形) {.
     cdecl, importc: "iterDestroyPolygon".}
-
-proc 初始化高斯珀迭代*(单元: H3索引, 子级分辨率: cint): 迭代高斯珀边 {.
-    cdecl, importc: "iterInitGosper".}
-proc 步进高斯珀迭代*(迭代: ptr 迭代高斯珀边) {.
-    cdecl, importc: "iterStepGosper".}
 
 # ── Nim 便捷封装 ──────────────────────────
 
