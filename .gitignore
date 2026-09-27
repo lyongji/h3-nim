@@ -10,3 +10,7 @@ nimcache/
 # H3 上游源码克隆（update_bindings.nims 的缓存）
 # vendored 源码在 src/h3lib/，必须保持被跟踪
 /h3/
+
+# 编译出的校验工具
+tools/check_bindings
+tools/check_bindings.exe

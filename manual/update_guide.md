@@ -6,7 +6,8 @@
 
 | 文件 | 作用 |
 |------|------|
-| `update_bindings.nims` | 更新脚本，包含 `update` / `sync` / `header` / `verify` / `info` 任务 |
+| `update_bindings.nims` | 更新脚本，包含 `update` / `sync` / `header` / `checkBindings` / `verify` / `info` 任务 |
+| `tools/check_bindings.nim` | 绑定静态校验：函数签名 + 结构体 ABI 与 C 头文件比对 |
 | `src/h3lib/lib/*.c` | vendored 的 H3 C 实现（由脚本生成，请勿手改） |
 | `src/h3lib/include/*.h` | vendored 的 H3 头文件（由脚本生成，请勿手改） |
 | `src/h3lib/include/h3api.h.in` | CMake 模板，`h3api.h` 由它生成 |
@@ -27,20 +28,23 @@
 # 2. 拉取上游源码并同步到 src/h3lib
 nim update update_bindings.nims
 
-# 3. 校验（绑定自检 + 单元测试）
+# 3. 校验（绑定一致性 + 自检 + 单元测试）
 nim verify update_bindings.nims
 ```
 
 `update` 是幂等的：若 `H3版本` 与当前 vendored 源码一致，重复运行不会产生任何改动。
+`update` 结束时会自动运行一次绑定一致性校验，校验失败会中断并提示需手动
+同步 `src/h3nim.nim`。
 
 ## 脚本任务
 
 | 命令 | 说明 |
 |------|------|
-| `nim update update_bindings.nims` | 拉取 `H3版本` → 同步源码/头文件 → 生成 `h3api.h` → 同步编译列表与版本号 |
+| `nim update update_bindings.nims` | 拉取 `H3版本` → 同步源码/头文件 → 生成 `h3api.h` → 同步编译列表与版本号 → 校验绑定 |
 | `nim sync update_bindings.nims` | 不联网：仅根据已 vendored 的文件重算 `{.compile:}` 列表、回写版本字符串 |
 | `nim header update_bindings.nims` | 不联网：仅由 `src/h3lib/include/h3api.h.in` 重新生成 `h3api.h` |
-| `nim verify update_bindings.nims` | 运行 `src/h3nim.nim` 自检与 `tests/test_h3nim.nim` 单元测试 |
+| `nim checkBindings update_bindings.nims` | 校验 Nim 绑定与 H3 C 头文件/结构体 ABI 是否一致 |
+| `nim verify update_bindings.nims` | 绑定校验 + `src/h3nim.nim` 自检 + `tests/test_h3nim.nim` 单元测试 |
 | `nim info update_bindings.nims` | 打印当前 vendored 版本、C 源文件数量与脚本目标 |
 
 ## 脚本做了什么
@@ -88,6 +92,34 @@ git checkout --force --detach <H3版本>
   - `README.md` 首段的 `vX.Y.Z`
   - `src/h3nim.nim` 的模块文档与自检输出
 
+## 绑定一致性校验（tools/check_bindings.nim）
+
+手写的 `importc` 不会经过 C 编译器的原型检查，H3 升级后可能出现
+「能编译、能链接，但签名/内存布局不一致」的静默错误（最危险）。
+`tools/check_bindings.nim` 专门防这一类问题：
+
+1. **函数签名**：解析 `h3api.h` / `iterators.h` / `polyfill.h` 与
+   `src/h3nim.nim` 的 `importc`，比对函数名、参数个数、参数类型、返回类型；
+2. **结构体 ABI**：通过 `{.emit.}` 包含真实 C 头文件，由 C 编译器计算
+   `sizeof`/`offsetof`，与 Nim 的 `sizeof`/`offsetOf` 逐一比对（12 个结构体）。
+
+`nim update` 与 `nim verify` 都会运行它，也可单独运行：
+
+```bash
+nim checkBindings update_bindings.nims
+```
+
+校验失败会列出具体差异（缺绑定、多余绑定、参数/返回类型不符、结构体大小/偏移不符）
+并返回非 0，按提示同步 `src/h3nim.nim` 即可：
+
+```
+发现 1 处不一致：
+  ✗ 参数类型不匹配 cellToBoundary[1]: C=ptr 单元边界 Nim=ptr H3索引
+```
+
+> 新增 / 删除被绑定的结构体时，需同步维护 `tools/check_bindings.nim`
+> 中的 emit 报告与 `nimLayout` 列表。
+
 ## 版本变更检查清单
 
 运行 `nim update` 后，按以下清单人工复核：
@@ -96,6 +128,7 @@ git checkout --force --detach <H3版本>
 - [ ] `git diff src/h3nim.nim` 确认 `{.compile:}` 列表已包含所有新增 `.c`、移除已删除的 `.c`
 - [ ] 如 `h3api.h.in` 新增 / 删除 / 修改了公共函数或类型，同步更新 `src/h3nim.nim` 中的 `importc` 绑定（见下节）
 - [ ] 确认 `h3nim.nimble` / `README.md` / `src/h3nim.nim` 的版本号已更新
+- [ ] `nim checkBindings update_bindings.nims` 无差异（静态签名 + 结构体 ABI）
 - [ ] `nim verify update_bindings.nims` 全部通过
 - [ ] `nimble test` 通过
 - [ ] 按需递增 `h3nim.nimble` 中绑定自身的 `version`（H3 升级通常对应次版本号 +1）

@@ -323,17 +323,22 @@ H3 C 源码已 vendored 到 `src/h3lib/`，不依赖 git submodule，
 # 2. 拉取上游源码并同步到 src/h3lib（源码、头文件、编译列表、版本号）
 nim update update_bindings.nims
 
-# 3. 校验（绑定自检 + 单元测试）
+# 3. 校验（绑定一致性 + 自检 + 单元测试）
 nim verify update_bindings.nims
 ```
 
 其他可选任务：
 
 ```bash
+nim checkBindings update_bindings.nims  # 绑定静态校验（函数签名 + 结构体 ABI）
 nim sync   update_bindings.nims   # 仅同步版本号与 {.compile:} 列表
 nim header update_bindings.nims   # 仅由 h3api.h.in 重新生成 h3api.h
 nim info   update_bindings.nims   # 查看当前 vendored 版本
 ```
+
+`nim update` / `nim verify` 会自动运行绑定校验（`tools/check_bindings.nim`），
+防止 H3 升级后 Nim 绑定与 C 头文件签名 / 结构体布局不一致。
+若手写了新的 `importc`，建议单独跑一次 `nim checkBindings`。
 
 完整流程、版本变更检查清单以及新增 / 删除 API 的处理方式见
 [`manual/update_guide.md`](./manual/update_guide.md)。

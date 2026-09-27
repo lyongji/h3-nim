@@ -178,14 +178,19 @@ proc 同步版本字符串() =
 
 # ── 任务 ─────────────────────────────────────────
 
+task checkBindings, "校验 Nim 绑定与 H3 C 头文件/结构体 ABI 是否一致":
+  exec "nim c -r --path:src tools/check_bindings.nim"
+
 task update, "拉取指定 H3 版本并同步到 src/h3lib":
   拉取H3()
   同步源码()
   生成头文件()
   生成编译列表()
   同步版本字符串()
+  echo "\n校验绑定一致性（如失败请按 manual/update_guide.md 更新 src/h3nim.nim）..."
+  checkBindingsTask()
   echo "\n完成: H3 v" & 读取Vendored版本() &
-       " 已同步。请运行 `nim verify update_bindings.nims` 验证。"
+       " 已同步并通过绑定校验。请运行 `nim verify update_bindings.nims` 验证。"
 
 task sync, "根据已 vendored 的文件同步版本号与编译列表":
   生成编译列表()
@@ -194,7 +199,8 @@ task sync, "根据已 vendored 的文件同步版本号与编译列表":
 task header, "重新生成 src/h3lib/include/h3api.h":
   生成头文件()
 
-task verify, "运行绑定自检与单元测试":
+task verify, "运行绑定校验、自检与单元测试":
+  checkBindingsTask()
   exec "nim c -r --path:src src/h3nim.nim"
   exec "nim c -r --path:src tests/test_h3nim.nim"
 
