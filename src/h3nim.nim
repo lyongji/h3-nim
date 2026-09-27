@@ -191,15 +191,15 @@ proc 检查错误*(错误: H3错误) {.inline.} =
     raise 新建H3异常(错误)
 
 # 经纬度 ↔ 单元
-proc 经纬度转单元*(经纬: ptr 经纬度, 分辨率: cint, 输出: ptr H3索引): H3错误 {.
+proc 经纬度转单元原*(经纬: ptr 经纬度, 分辨率: cint, 输出: ptr H3索引): H3错误 {.
     cdecl, importc: "latLngToCell".}
-proc 单元转经纬度*(单元: H3索引, 输出: ptr 经纬度): H3错误 {.
+proc 单元转经纬度原*(单元: H3索引, 输出: ptr 经纬度): H3错误 {.
     cdecl, importc: "cellToLatLng".}
-proc 单元转边界*(单元: H3索引, 输出: ptr 单元边界): H3错误 {.
+proc 单元转边界原*(单元: H3索引, 输出: ptr 单元边界): H3错误 {.
     cdecl, importc: "cellToBoundary".}
 
 # 网格圆盘（k-ring）
-proc 最大网格圆盘数*(k: cint, 输出: ptr int64): H3错误 {.
+proc 最大网格圆盘数原*(k: cint, 输出: ptr int64): H3错误 {.
     cdecl, importc: "maxGridDiskSize".}
 proc 网格圆盘不安全*(原点: H3索引, k: cint, 输出: ptr H3索引): H3错误 {.
     cdecl, importc: "gridDiskUnsafe".}
@@ -212,31 +212,31 @@ proc 网格圆盘距离安全*(原点: H3索引, k: cint,
 proc 网格圆盘集不安全*(单元集: ptr H3索引, 长度: cint, k: cint,
                        输出: ptr H3索引): H3错误 {.
     cdecl, importc: "gridDisksUnsafe".}
-proc 网格圆盘*(原点: H3索引, k: cint, 输出: ptr H3索引): H3错误 {.
+proc 网格圆盘原*(原点: H3索引, k: cint, 输出: ptr H3索引): H3错误 {.
     cdecl, importc: "gridDisk".}
-proc 网格圆盘距离*(原点: H3索引, k: cint,
+proc 网格圆盘距离原*(原点: H3索引, k: cint,
                    输出: ptr H3索引, 距离: ptr cint): H3错误 {.
     cdecl, importc: "gridDiskDistances".}
 
 # 网格环
-proc 最大网格环数*(k: cint, 输出: ptr int64): H3错误 {.
+proc 最大网格环数原*(k: cint, 输出: ptr int64): H3错误 {.
     cdecl, importc: "maxGridRingSize".}
 proc 网格环不安全*(原点: H3索引, k: cint, 输出: ptr H3索引): H3错误 {.
     cdecl, importc: "gridRingUnsafe".}
-proc 网格环*(原点: H3索引, k: cint, 输出: ptr H3索引): H3错误 {.
+proc 网格环原*(原点: H3索引, k: cint, 输出: ptr H3索引): H3错误 {.
     cdecl, importc: "gridRing".}
 
 # 多边形 ↔ 单元
-proc 最大多边形转单元数*(地理多边形: ptr 地理多边形, 分辨率: cint,
+proc 最大多边形转单元数原*(地理多边形: ptr 地理多边形, 分辨率: cint,
                          标志: uint32, 输出: ptr int64): H3错误 {.
     cdecl, importc: "maxPolygonToCellsSize".}
-proc 多边形转单元*(地理多边形: ptr 地理多边形, 分辨率: cint,
+proc 多边形转单元原*(地理多边形: ptr 地理多边形, 分辨率: cint,
                    标志: uint32, 输出: ptr H3索引): H3错误 {.
     cdecl, importc: "polygonToCells".}
-proc 最大多边形转单元数实验*(多边形: ptr 地理多边形, 分辨率: cint,
+proc 最大多边形转单元数实验原*(多边形: ptr 地理多边形, 分辨率: cint,
                              标志: uint32, 输出: ptr int64): H3错误 {.
     cdecl, importc: "maxPolygonToCellsSizeExperimental".}
-proc 多边形转单元实验*(多边形: ptr 地理多边形, 分辨率: cint,
+proc 多边形转单元实验原*(多边形: ptr 地理多边形, 分辨率: cint,
                        标志: uint32, 大小: int64,
                        输出: ptr H3索引): H3错误 {.
     cdecl, importc: "polygonToCellsExperimental".}
@@ -253,58 +253,58 @@ proc 度转弧度*(度: float64): float64 {.cdecl, importc: "degsToRads".}
 proc 弧度转度*(弧度: float64): float64 {.cdecl, importc: "radsToDegs".}
 
 # 大圆距离
-proc 大圆距离弧度*(a, b: ptr 经纬度): float64 {.
+proc 大圆距离弧度原*(a, b: ptr 经纬度): float64 {.
     cdecl, importc: "greatCircleDistanceRads".}
-proc 大圆距离千米*(a, b: ptr 经纬度): float64 {.
+proc 大圆距离千米原*(a, b: ptr 经纬度): float64 {.
     cdecl, importc: "greatCircleDistanceKm".}
-proc 大圆距离米*(a, b: ptr 经纬度): float64 {.
+proc 大圆距离米原*(a, b: ptr 经纬度): float64 {.
     cdecl, importc: "greatCircleDistanceM".}
 
 # 面积
-proc 获取六边形平均面积平方千米*(分辨率: cint, 输出: ptr float64): H3错误 {.
+proc 获取六边形平均面积平方千米原*(分辨率: cint, 输出: ptr float64): H3错误 {.
     cdecl, importc: "getHexagonAreaAvgKm2".}
-proc 获取六边形平均面积平方米*(分辨率: cint, 输出: ptr float64): H3错误 {.
+proc 获取六边形平均面积平方米原*(分辨率: cint, 输出: ptr float64): H3错误 {.
     cdecl, importc: "getHexagonAreaAvgM2".}
-proc 单元面积弧度平方*(单元: H3索引, 输出: ptr float64): H3错误 {.
+proc 单元面积弧度平方原*(单元: H3索引, 输出: ptr float64): H3错误 {.
     cdecl, importc: "cellAreaRads2".}
-proc 单元面积平方千米*(单元: H3索引, 输出: ptr float64): H3错误 {.
+proc 单元面积平方千米原*(单元: H3索引, 输出: ptr float64): H3错误 {.
     cdecl, importc: "cellAreaKm2".}
-proc 单元面积平方米*(单元: H3索引, 输出: ptr float64): H3错误 {.
+proc 单元面积平方米原*(单元: H3索引, 输出: ptr float64): H3错误 {.
     cdecl, importc: "cellAreaM2".}
 
 # 边长
-proc 获取六边形平均边长千米*(分辨率: cint, 输出: ptr float64): H3错误 {.
+proc 获取六边形平均边长千米原*(分辨率: cint, 输出: ptr float64): H3错误 {.
     cdecl, importc: "getHexagonEdgeLengthAvgKm".}
-proc 获取六边形平均边长米*(分辨率: cint, 输出: ptr float64): H3错误 {.
+proc 获取六边形平均边长米原*(分辨率: cint, 输出: ptr float64): H3错误 {.
     cdecl, importc: "getHexagonEdgeLengthAvgM".}
-proc 边长度弧度*(边: H3索引, 长度: ptr float64): H3错误 {.
+proc 边长度弧度原*(边: H3索引, 长度: ptr float64): H3错误 {.
     cdecl, importc: "edgeLengthRads".}
-proc 边长度千米*(边: H3索引, 长度: ptr float64): H3错误 {.
+proc 边长度千米原*(边: H3索引, 长度: ptr float64): H3错误 {.
     cdecl, importc: "edgeLengthKm".}
-proc 边长度米*(边: H3索引, 长度: ptr float64): H3错误 {.
+proc 边长度米原*(边: H3索引, 长度: ptr float64): H3错误 {.
     cdecl, importc: "edgeLengthM".}
 
 # 单元计数
-proc 获取单元数*(分辨率: cint, 输出: ptr int64): H3错误 {.
+proc 获取单元数原*(分辨率: cint, 输出: ptr int64): H3错误 {.
     cdecl, importc: "getNumCells".}
-proc 零级单元数*(): cint {.cdecl, importc: "res0CellCount".}
-proc 获取零级单元*(输出: ptr H3索引): H3错误 {.
+proc 零级单元数原*(): cint {.cdecl, importc: "res0CellCount".}
+proc 获取零级单元原*(输出: ptr H3索引): H3错误 {.
     cdecl, importc: "getRes0Cells".}
-proc 五边形数*(): cint {.cdecl, importc: "pentagonCount".}
-proc 获取五边形*(分辨率: cint, 输出: ptr H3索引): H3错误 {.
+proc 五边形数原*(): cint {.cdecl, importc: "pentagonCount".}
+proc 获取五边形原*(分辨率: cint, 输出: ptr H3索引): H3错误 {.
     cdecl, importc: "getPentagons".}
 
 # 索引查询
 proc 获取分辨率原*(单元: H3索引): cint {.cdecl, importc: "getResolution".}
-proc 获取基单元号*(单元: H3索引): cint {.cdecl, importc: "getBaseCellNumber".}
-proc 获取索引位*(单元: H3索引, 分辨率: cint, 输出: ptr cint): H3错误 {.
+proc 获取基单元号原*(单元: H3索引): cint {.cdecl, importc: "getBaseCellNumber".}
+proc 获取索引位原*(单元: H3索引, 分辨率: cint, 输出: ptr cint): H3错误 {.
     cdecl, importc: "getIndexDigit".}
-proc 构造单元*(分辨率: cint, 基单元号: cint, 子位: ptr cint,
+proc 构造单元原*(分辨率: cint, 基单元号: cint, 子位: ptr cint,
                输出: ptr H3索引): H3错误 {.
     cdecl, importc: "constructCell".}
 
 # 字符串 ↔ 单元
-proc 字符串转单元*(字符串: cstring, 输出: ptr H3索引): H3错误 {.
+proc 字符串转单元原*(字符串: cstring, 输出: ptr H3索引): H3错误 {.
     cdecl, importc: "stringToH3".}
 proc 单元转字符串原*(单元: H3索引, 字符串: cstring, 大小: csize_t): H3错误 {.
     cdecl, importc: "h3ToString".}
@@ -314,33 +314,33 @@ proc 是否有效单元原*(单元: H3索引): cint {.cdecl, importc: "isValidCe
 proc 是否有效索引原*(索引: H3索引): cint {.cdecl, importc: "isValidIndex".}
 
 # 层级
-proc 单元转父级*(单元: H3索引, 父级分辨率: cint,
+proc 单元转父级原*(单元: H3索引, 父级分辨率: cint,
                  父级: ptr H3索引): H3错误 {.
     cdecl, importc: "cellToParent".}
-proc 单元转子级数*(单元: H3索引, 子级分辨率: cint,
+proc 单元转子级数原*(单元: H3索引, 子级分辨率: cint,
                    输出: ptr int64): H3错误 {.
     cdecl, importc: "cellToChildrenSize".}
-proc 单元转子级*(单元: H3索引, 子级分辨率: cint,
+proc 单元转子级原*(单元: H3索引, 子级分辨率: cint,
                  子级: ptr H3索引): H3错误 {.
     cdecl, importc: "cellToChildren".}
-proc 单元转中心子级*(单元: H3索引, 子级分辨率: cint,
+proc 单元转中心子级原*(单元: H3索引, 子级分辨率: cint,
                      子级: ptr H3索引): H3错误 {.
     cdecl, importc: "cellToCenterChild".}
-proc 单元转子级位置*(子级: H3索引, 父级分辨率: cint,
+proc 单元转子级位置原*(子级: H3索引, 父级分辨率: cint,
                      输出: ptr int64): H3错误 {.
     cdecl, importc: "cellToChildPos".}
-proc 子级位置转单元*(子级位置: int64, 父级: H3索引,
+proc 子级位置转单元原*(子级位置: int64, 父级: H3索引,
                      子级分辨率: cint, 子级: ptr H3索引): H3错误 {.
     cdecl, importc: "childPosToCell".}
 
 # 紧凑/解紧凑
-proc 紧凑单元*(单元集: ptr H3索引, 紧凑集: ptr H3索引,
+proc 紧凑单元原*(单元集: ptr H3索引, 紧凑集: ptr H3索引,
                单元数: int64): H3错误 {.
     cdecl, importc: "compactCells".}
-proc 解紧凑单元数*(紧凑集: ptr H3索引, 紧凑数: int64,
+proc 解紧凑单元数原*(紧凑集: ptr H3索引, 紧凑数: int64,
                    分辨率: cint, 输出: ptr int64): H3错误 {.
     cdecl, importc: "uncompactCellsSize".}
-proc 解紧凑单元*(紧凑集: ptr H3索引, 紧凑数: int64,
+proc 解紧凑单元原*(紧凑集: ptr H3索引, 紧凑数: int64,
                  输出集: ptr H3索引, 输出数: int64,
                  分辨率: cint): H3错误 {.
     cdecl, importc: "uncompactCells".}
@@ -350,9 +350,9 @@ proc 是否三级类原*(单元: H3索引): cint {.cdecl, importc: "isResClassII
 proc 是否五边形原*(单元: H3索引): cint {.cdecl, importc: "isPentagon".}
 
 # 二十面体面
-proc 最大面数*(单元: H3索引, 输出: ptr cint): H3错误 {.
+proc 最大面数原*(单元: H3索引, 输出: ptr cint): H3错误 {.
     cdecl, importc: "maxFaceCount".}
-proc 获取二十面体面*(单元: H3索引, 输出: ptr cint): H3错误 {.
+proc 获取二十面体面原*(单元: H3索引, 输出: ptr cint): H3错误 {.
     cdecl, importc: "getIcosahedronFaces".}
 
 # 邻接
@@ -360,46 +360,46 @@ proc 是否相邻单元原*(原点, 目标: H3索引, 输出: ptr cint): H3错�
     cdecl, importc: "areNeighborCells".}
 
 # 有向边
-proc 单元转有向边*(原点, 目标: H3索引, 输出: ptr H3索引): H3错误 {.
+proc 单元转有向边原*(原点, 目标: H3索引, 输出: ptr H3索引): H3错误 {.
     cdecl, importc: "cellsToDirectedEdge".}
 proc 是否有效有向边原*(边: H3索引): cint {.
     cdecl, importc: "isValidDirectedEdge".}
-proc 获取有向边起点*(边: H3索引, 输出: ptr H3索引): H3错误 {.
+proc 获取有向边起点原*(边: H3索引, 输出: ptr H3索引): H3错误 {.
     cdecl, importc: "getDirectedEdgeOrigin".}
-proc 获取有向边终点*(边: H3索引, 输出: ptr H3索引): H3错误 {.
+proc 获取有向边终点原*(边: H3索引, 输出: ptr H3索引): H3错误 {.
     cdecl, importc: "getDirectedEdgeDestination".}
-proc 有向边转单元*(边: H3索引, 起点终点: ptr H3索引): H3错误 {.
+proc 有向边转单元原*(边: H3索引, 起点终点: ptr H3索引): H3错误 {.
     cdecl, importc: "directedEdgeToCells".}
-proc 起点转有向边集*(起点: H3索引, 边集: ptr H3索引): H3错误 {.
+proc 起点转有向边集原*(起点: H3索引, 边集: ptr H3索引): H3错误 {.
     cdecl, importc: "originToDirectedEdges".}
-proc 有向边转边界*(边: H3索引, 输出: ptr 单元边界): H3错误 {.
+proc 有向边转边界原*(边: H3索引, 输出: ptr 单元边界): H3错误 {.
     cdecl, importc: "directedEdgeToBoundary".}
-proc 反转有向边*(边: H3索引, 输出: ptr H3索引): H3错误 {.
+proc 反转有向边原*(边: H3索引, 输出: ptr H3索引): H3错误 {.
     cdecl, importc: "reverseDirectedEdge".}
 
 # 顶点
-proc 单元转顶点*(原点: H3索引, 顶点号: cint, 输出: ptr H3索引): H3错误 {.
+proc 单元转顶点原*(原点: H3索引, 顶点号: cint, 输出: ptr H3索引): H3错误 {.
     cdecl, importc: "cellToVertex".}
-proc 单元转顶点集*(原点: H3索引, 顶点集: ptr H3索引): H3错误 {.
+proc 单元转顶点集原*(原点: H3索引, 顶点集: ptr H3索引): H3错误 {.
     cdecl, importc: "cellToVertexes".}
-proc 顶点转经纬度*(顶点: H3索引, 点: ptr 经纬度): H3错误 {.
+proc 顶点转经纬度原*(顶点: H3索引, 点: ptr 经纬度): H3错误 {.
     cdecl, importc: "vertexToLatLng".}
 proc 是否有效顶点原*(顶点: H3索引): cint {.
     cdecl, importc: "isValidVertex".}
 
 # 网格路径
-proc 网格距离*(原点, 目标: H3索引, 距离: ptr int64): H3错误 {.
+proc 网格距离原*(原点, 目标: H3索引, 距离: ptr int64): H3错误 {.
     cdecl, importc: "gridDistance".}
-proc 网格路径单元数*(起点, 终点: H3索引, 大小: ptr int64): H3错误 {.
+proc 网格路径单元数原*(起点, 终点: H3索引, 大小: ptr int64): H3错误 {.
     cdecl, importc: "gridPathCellsSize".}
-proc 网格路径单元*(起点, 终点: H3索引, 输出: ptr H3索引): H3错误 {.
+proc 网格路径单元原*(起点, 终点: H3索引, 输出: ptr H3索引): H3错误 {.
     cdecl, importc: "gridPathCells".}
 
 # 局部 IJ 坐标
-proc 单元转局部IJ*(原点, 目标: H3索引, 模式: uint32,
+proc 单元转局部IJ原*(原点, 目标: H3索引, 模式: uint32,
                    输出: ptr 坐标IJ): H3错误 {.
     cdecl, importc: "cellToLocalIj".}
-proc 局部IJ转单元*(原点: H3索引, ij: ptr 坐标IJ,
+proc 局部IJ转单元原*(原点: H3索引, ij: ptr 坐标IJ,
                    模式: uint32, 输出: ptr H3索引): H3错误 {.
     cdecl, importc: "localIjToCell".}
 
@@ -434,14 +434,20 @@ proc 销毁多边形迭代*(迭代: ptr 迭代多边形) {.
     cdecl, importc: "iterDestroyPolygon".}
 
 # ── Nim 便捷封装 ──────────────────────────
+#
+# 约定：`foo原` 为逐字对应 C 签名的原始绑定（使用 `ptr` 输出参数、返回 `H3错误`）；
+# `foo` 为 Nim 风格封装（值 / `seq` / `tuple` / `bool`），失败时抛出 `H3异常`。
 
+# 角度 / 坐标
 proc 经纬度转单元*(经纬: 经纬度, 分辨率: int): H3索引 =
-  ## 失败时抛出 `H3异常`；需要错误码请改用底层指针重载。
-  检查错误(经纬度转单元(addr 经纬, 分辨率.cint, addr result))
+  ## 失败时抛出 `H3异常`；需要错误码请改用 `经纬度转单元原`。
+  检查错误(经纬度转单元原(addr 经纬, 分辨率.cint, addr result))
 
 proc 单元转经纬度*(单元: H3索引): 经纬度 =
-  ## 失败时抛出 `H3异常`。
-  检查错误(单元转经纬度(单元, addr result))
+  检查错误(单元转经纬度原(单元, addr result))
+
+proc 单元转边界*(单元: H3索引): 单元边界 =
+  检查错误(单元转边界原(单元, addr result))
 
 proc 单元转字符串*(单元: H3索引): string =
   ## 失败时抛出 `H3异常`（正常不会失败）。
@@ -451,8 +457,9 @@ proc 单元转字符串*(单元: H3索引): string =
 
 proc 字符串转单元*(字符串: string): H3索引 =
   ## 解析失败时抛出 `H3异常`。
-  检查错误(字符串转单元(字符串.cstring, addr result))
+  检查错误(字符串转单元原(字符串.cstring, addr result))
 
+# 布尔谓词
 proc 是否有效单元*(单元: H3索引): bool =
   是否有效单元原(单元) != 0
 
@@ -478,16 +485,246 @@ proc 是否相邻单元*(原点, 目标: H3索引): bool =
   else:
     false
 
+# 索引查询
 proc 获取分辨率*(单元: H3索引): int =
   获取分辨率原(单元).int
 
+proc 获取基单元号*(单元: H3索引): int =
+  获取基单元号原(单元).int
+
+proc 零级单元数*(): int =
+  零级单元数原().int
+
+proc 五边形数*(): int =
+  五边形数原().int
+
+proc 获取单元数*(分辨率: int): int64 =
+  检查错误(获取单元数原(分辨率.cint, addr result))
+
+proc 获取索引位*(单元: H3索引, 分辨率: int): int =
+  var 位: cint
+  检查错误(获取索引位原(单元, 分辨率.cint, addr 位))
+  位.int
+
+proc 构造单元*(分辨率: int, 基单元号: int, 子位: openArray[int]): H3索引 =
+  var 数字 = newSeq[cint](子位.len)
+  for i, d in 子位: 数字[i] = d.cint
+  let 指针 = if 数字.len > 0: addr 数字[0] else: nil
+  检查错误(构造单元原(分辨率.cint, 基单元号.cint, 指针, addr result))
+
+# 网格圆盘 / 环 / 距离
+proc 最大网格圆盘数*(k: int): int64 =
+  检查错误(最大网格圆盘数原(k.cint, addr result))
+
+proc 网格圆盘*(原点: H3索引, k: int): seq[H3索引] =
+  result = newSeq[H3索引](最大网格圆盘数(k))
+  if result.len > 0:
+    检查错误(网格圆盘原(原点, k.cint, addr result[0]))
+
+proc 网格圆盘距离*(原点: H3索引, k: int): seq[(H3索引, int)] =
+  let 数量 = 最大网格圆盘数(k)
+  if 数量 == 0: return @[]
+  var 单元 = newSeq[H3索引](数量)
+  var 距离 = newSeq[cint](数量)
+  检查错误(网格圆盘距离原(原点, k.cint, addr 单元[0], addr 距离[0]))
+  result = newSeq[(H3索引, int)](数量)
+  for i in 0 ..< 数量:
+    result[i] = (单元[i], 距离[i].int)
+
+proc 最大网格环数*(k: int): int64 =
+  检查错误(最大网格环数原(k.cint, addr result))
+
+proc 网格环*(原点: H3索引, k: int): seq[H3索引] =
+  result = newSeq[H3索引](最大网格环数(k))
+  if result.len > 0:
+    检查错误(网格环原(原点, k.cint, addr result[0]))
+
+# 层级
 proc 单元转父级*(单元: H3索引, 父级分辨率: int): H3索引 =
-  ## 失败时抛出 `H3异常`。
-  检查错误(单元转父级(单元, 父级分辨率.cint, addr result))
+  检查错误(单元转父级原(单元, 父级分辨率.cint, addr result))
+
+proc 单元转子级数*(单元: H3索引, 子级分辨率: int): int64 =
+  检查错误(单元转子级数原(单元, 子级分辨率.cint, addr result))
+
+proc 单元转子级*(单元: H3索引, 子级分辨率: int): seq[H3索引] =
+  result = newSeq[H3索引](单元转子级数(单元, 子级分辨率))
+  if result.len > 0:
+    检查错误(单元转子级原(单元, 子级分辨率.cint, addr result[0]))
 
 proc 单元转中心子级*(单元: H3索引, 子级分辨率: int): H3索引 =
-  ## 失败时抛出 `H3异常`。
-  检查错误(单元转中心子级(单元, 子级分辨率.cint, addr result))
+  检查错误(单元转中心子级原(单元, 子级分辨率.cint, addr result))
+
+proc 单元转子级位置*(子级: H3索引, 父级分辨率: int): int64 =
+  检查错误(单元转子级位置原(子级, 父级分辨率.cint, addr result))
+
+proc 子级位置转单元*(子级位置: int64, 父级: H3索引, 子级分辨率: int): H3索引 =
+  检查错误(子级位置转单元原(子级位置, 父级, 子级分辨率.cint, addr result))
+
+# 紧凑 / 解紧凑
+proc 紧凑单元*(单元集: openArray[H3索引]): seq[H3索引] =
+  if 单元集.len == 0: return @[]
+  result = newSeq[H3索引](单元集.len)
+  检查错误(紧凑单元原(addr 单元集[0], addr result[0], 单元集.len.int64))
+
+proc 解紧凑单元数*(紧凑集: openArray[H3索引], 分辨率: int): int64 =
+  if 紧凑集.len == 0: return 0
+  检查错误(解紧凑单元数原(addr 紧凑集[0], 紧凑集.len.int64, 分辨率.cint,
+                             addr result))
+
+proc 解紧凑单元*(紧凑集: openArray[H3索引], 分辨率: int): seq[H3索引] =
+  let 数量 = 解紧凑单元数(紧凑集, 分辨率)
+  if 数量 == 0: return @[]
+  result = newSeq[H3索引](数量)
+  检查错误(解紧凑单元原(addr 紧凑集[0], 紧凑集.len.int64, addr result[0],
+                         数量, 分辨率.cint))
+
+# 全局枚举
+proc 获取零级单元*(): seq[H3索引] =
+  result = newSeq[H3索引](零级单元数())
+  检查错误(获取零级单元原(addr result[0]))
+
+proc 获取五边形*(分辨率: int): seq[H3索引] =
+  result = newSeq[H3索引](五边形数())
+  检查错误(获取五边形原(分辨率.cint, addr result[0]))
+
+# 二十面体面
+proc 最大面数*(单元: H3索引): int =
+  var 数: cint
+  检查错误(最大面数原(单元, addr 数))
+  数.int
+
+proc 获取二十面体面*(单元: H3索引): seq[int] =
+  let 数量 = 最大面数(单元)
+  if 数量 == 0: return @[]
+  var 面 = newSeq[cint](数量)
+  检查错误(获取二十面体面原(单元, addr 面[0]))
+  result = newSeq[int](数量)
+  for i in 0 ..< 数量: result[i] = 面[i].int
+
+# 有向边
+proc 单元转有向边*(原点, 目标: H3索引): H3索引 =
+  检查错误(单元转有向边原(原点, 目标, addr result))
+
+proc 获取有向边起点*(边: H3索引): H3索引 =
+  检查错误(获取有向边起点原(边, addr result))
+
+proc 获取有向边终点*(边: H3索引): H3索引 =
+  检查错误(获取有向边终点原(边, addr result))
+
+proc 有向边转单元*(边: H3索引): (H3索引, H3索引) =
+  var 起终: array[2, H3索引]
+  检查错误(有向边转单元原(边, addr 起终[0]))
+  (起终[0], 起终[1])
+
+proc 起点转有向边集*(起点: H3索引): seq[H3索引] =
+  result = newSeq[H3索引](6)
+  检查错误(起点转有向边集原(起点, addr result[0]))
+
+proc 有向边转边界*(边: H3索引): 单元边界 =
+  检查错误(有向边转边界原(边, addr result))
+
+proc 反转有向边*(边: H3索引): H3索引 =
+  检查错误(反转有向边原(边, addr result))
+
+# 顶点
+proc 单元转顶点*(原点: H3索引, 顶点号: int): H3索引 =
+  检查错误(单元转顶点原(原点, 顶点号.cint, addr result))
+
+proc 单元转顶点集*(原点: H3索引): seq[H3索引] =
+  result = newSeq[H3索引](6)
+  检查错误(单元转顶点集原(原点, addr result[0]))
+
+proc 顶点转经纬度*(顶点: H3索引): 经纬度 =
+  检查错误(顶点转经纬度原(顶点, addr result))
+
+# 网格路径
+proc 网格距离*(原点, 目标: H3索引): int64 =
+  检查错误(网格距离原(原点, 目标, addr result))
+
+proc 网格路径单元数*(起点, 终点: H3索引): int64 =
+  检查错误(网格路径单元数原(起点, 终点, addr result))
+
+proc 网格路径单元*(起点, 终点: H3索引): seq[H3索引] =
+  result = newSeq[H3索引](网格路径单元数(起点, 终点))
+  if result.len > 0:
+    检查错误(网格路径单元原(起点, 终点, addr result[0]))
+
+# 局部 IJ 坐标
+proc 单元转局部IJ*(原点, 目标: H3索引, 模式: uint32 = 0): 坐标IJ =
+  检查错误(单元转局部IJ原(原点, 目标, 模式, addr result))
+
+proc 局部IJ转单元*(原点: H3索引, ij: 坐标IJ, 模式: uint32 = 0): H3索引 =
+  检查错误(局部IJ转单元原(原点, addr ij, 模式, addr result))
+
+# 多边形填充
+proc 最大多边形转单元数*(多边形: var 地理多边形, 分辨率: int,
+                          标志: uint32 = 0): int64 =
+  检查错误(最大多边形转单元数原(addr 多边形, 分辨率.cint, 标志, addr result))
+
+proc 多边形转单元*(多边形: var 地理多边形, 分辨率: int,
+                    标志: uint32 = 0): seq[H3索引] =
+  ## 经典算法按哈希槽位写入，内部已过滤 `H3空` 空洞。
+  let 预估 = 最大多边形转单元数(多边形, 分辨率, 标志)
+  if 预估 <= 0: return @[]
+  var 缓冲 = newSeq[H3索引](预估)
+  检查错误(多边形转单元原(addr 多边形, 分辨率.cint, 标志, addr 缓冲[0]))
+  for 单元 in 缓冲:
+    if 单元 != H3空: result.add 单元
+
+proc 最大多边形转单元数实验*(多边形: var 地理多边形, 分辨率: int,
+                              标志: uint32 = 0): int64 =
+  检查错误(最大多边形转单元数实验原(addr 多边形, 分辨率.cint, 标志, addr result))
+
+proc 多边形转单元实验*(多边形: var 地理多边形, 分辨率: int,
+                        标志: uint32 = 0): seq[H3索引] =
+  ## 实验性算法连续写入，输出无空洞。
+  let 预估 = 最大多边形转单元数实验(多边形, 分辨率, 标志)
+  if 预估 <= 0: return @[]
+  var 缓冲 = newSeq[H3索引](预估)
+  检查错误(多边形转单元实验原(addr 多边形, 分辨率.cint, 标志, 预估,
+                               addr 缓冲[0]))
+  for 单元 in 缓冲:
+    if 单元 != H3空: result.add 单元
+
+# 面积 / 边长 / 距离
+proc 单元面积弧度平方*(单元: H3索引): float64 =
+  检查错误(单元面积弧度平方原(单元, addr result))
+
+proc 单元面积平方千米*(单元: H3索引): float64 =
+  检查错误(单元面积平方千米原(单元, addr result))
+
+proc 单元面积平方米*(单元: H3索引): float64 =
+  检查错误(单元面积平方米原(单元, addr result))
+
+proc 获取六边形平均面积平方千米*(分辨率: int): float64 =
+  检查错误(获取六边形平均面积平方千米原(分辨率.cint, addr result))
+
+proc 获取六边形平均面积平方米*(分辨率: int): float64 =
+  检查错误(获取六边形平均面积平方米原(分辨率.cint, addr result))
+
+proc 获取六边形平均边长千米*(分辨率: int): float64 =
+  检查错误(获取六边形平均边长千米原(分辨率.cint, addr result))
+
+proc 获取六边形平均边长米*(分辨率: int): float64 =
+  检查错误(获取六边形平均边长米原(分辨率.cint, addr result))
+
+proc 边长度弧度*(边: H3索引): float64 =
+  检查错误(边长度弧度原(边, addr result))
+
+proc 边长度千米*(边: H3索引): float64 =
+  检查错误(边长度千米原(边, addr result))
+
+proc 边长度米*(边: H3索引): float64 =
+  检查错误(边长度米原(边, addr result))
+
+proc 大圆距离弧度*(a, b: 经纬度): float64 =
+  大圆距离弧度原(addr a, addr b)
+
+proc 大圆距离千米*(a, b: 经纬度): float64 =
+  大圆距离千米原(addr a, addr b)
+
+proc 大圆距离米*(a, b: 经纬度): float64 =
+  大圆距离米原(addr a, addr b)
 
 # ── 演示/自检 ──
 
@@ -513,15 +750,14 @@ when isMainModule:
 
   # 大圆距离
   let 洛杉矶 = 度转经纬度(34.0522, -118.2437)
-  echo "旧金山→洛杉矶: ", 大圆距离千米(addr 旧金山, addr 洛杉矶), " km"
+  echo "旧金山→洛杉矶: ", 大圆距离千米(旧金山, 洛杉矶), " km"
 
   # k-ring
-  var 邻居: array[7, H3索引]
-  if 网格圆盘(单元, 1, addr 邻居[0]) == 成功:
-    echo "1-ring: ", 邻居.len, " 个单元"
-    for i, 邻 in 邻居.pairs:
-      if 邻 != H3空:
-        echo "  ", i, ": ", 单元转字符串(邻)
+  let 邻居 = 网格圆盘(单元, 1)
+  echo "1-ring: ", 邻居.len, " 个单元"
+  for i, 邻 in 邻居.pairs:
+    if 邻 != H3空:
+      echo "  ", i, ": ", 单元转字符串(邻)
 
   # 错误码
   echo "H3错误描述: ", $描述H3错误(H3错误(0))

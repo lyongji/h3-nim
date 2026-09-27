@@ -147,6 +147,9 @@ nim checkBindings update_bindings.nims
 
 2. 在 `src/h3nim.nim` 中：
    - 新增函数：按现有风格添加对应中文命名的 `importc` 声明；
+   - 命名约定：原始 `importc` 绑定用 `foo原`（逐字对应 C 签名、`ptr`
+     输出参数、返回 `H3错误`），Nim 风格封装用 `foo`（值 / `seq` / `tuple` /
+     `bool`，失败抛 `H3异常`）；若暂不提供封装，原始绑定保留 `foo` 即可；
    - 新增类型 / 结构体：在「基础类型」区域补充 Nim 类型并映射 C 类型；
    - 删除函数：移除对应绑定；
    - 参数或返回类型变化：同步修改签名。

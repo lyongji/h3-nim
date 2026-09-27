@@ -2,7 +2,7 @@
 ##
 ## 使用: nim c --path:src -r examples/example_geofence.nim
 
-import std/[strformat, sequtils]
+import std/strformat
 import h3nim
 
 # ── 工具：构造矩形多边形 / 释放 / 收集单元 ───────
@@ -27,19 +27,8 @@ proc 释放(多边形: var 地理多边形) =
     多边形.外环.顶点 = nil
 
 proc 收集单元(多边形: var 地理多边形, 分辨率: int): seq[H3索引] =
-  ## 用经典 `多边形转单元` 填充，再过滤掉 H3空。
-  ##
-  ## 注意：`polygonToCells` 的输出是按哈希槽位写入的，并非连续排列，
-  ## 因此必须遍历整个缓冲区并过滤 H3空，不能只取前 N 个。
-  var 预估: int64
-  if 最大多边形转单元数(addr 多边形, 分辨率.cint, 0, addr 预估) != 成功:
-    return
-  if 预估 <= 0:
-    return
-  var 缓冲 = newSeq[H3索引](预估)
-  if 多边形转单元(addr 多边形, 分辨率.cint, 0, addr 缓冲[0]) != 成功:
-    return
-  缓冲.filterIt(it != H3空)
+  ## `多边形转单元` 封装已内部过滤掉哈希空洞产生的 H3空。
+  多边形转单元(多边形, 分辨率)
 
 # ── 1. 故宫区域的多分辨率覆盖 ─────────────────
 
@@ -70,16 +59,10 @@ echo &"国贸({单元转字符串(国贸)}) 在故宫内: {国贸 in 覆盖集}"
 echo "\n=== 实验性 polygonToCellsExperimental（连续输出）==="
 var 故宫实验 = 矩形多边形(39.9070, 116.3970, 39.9150, 116.4030)
 block:
-  var 预估: int64
-  if 最大多边形转单元数实验(addr 故宫实验, 9.cint, 0, addr 预估) == 成功:
-    var 缓冲 = newSeq[H3索引](预估)
-    let 错误 = 多边形转单元实验(addr 故宫实验, 9.cint, 0, 预估, addr 缓冲[0])
-    if 错误 == 成功:
-      # 实验性 API 连续写入，无需过滤空洞
-      let 数量 = 缓冲.countIt(it != H3空)
-      echo &"res 9: {数量} 个单元（连续排列）"
-      for i in 0 ..< min(数量, 5):
-        echo "  ", 单元转字符串(缓冲[i])
+  let 缓冲 = 多边形转单元实验(故宫实验, 9)
+  echo &"res 9: {缓冲.len} 个单元（连续排列）"
+  for i in 0 ..< min(缓冲.len, 5):
+    echo "  ", 单元转字符串(缓冲[i])
 故宫实验.释放()
 
 # ── 4. 大范围区域统计 ────────────────────────
