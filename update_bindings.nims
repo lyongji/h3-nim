@@ -87,15 +87,25 @@ proc 读取Vendored版本(): string =
 # ── 步骤 1: 拉取上游源码 ─────────────────────────
 
 proc 拉取H3() =
-  let 首次 = not dirExists(H3目录)
-  if 首次:
-    echo "克隆 " & H3仓库 & " -> " & H3目录
-    exec "git clone " & H3仓库 & " " & quoteShell(H3目录)
+  let 标记 = H3目录 / ".sparse-partial"
+  if dirExists(H3目录) and not fileExists(标记):
+    # 兼容旧版脚本留下的完整克隆，重建为稀疏部分克隆
+    echo "重建稀疏克隆缓存 " & H3目录
+    rmDir(H3目录)
+  if not dirExists(H3目录):
+    echo "克隆 " & H3仓库 & " -> " & H3目录 & "（稀疏 + 部分克隆）"
+    # 只检出 src/h3lib，缓存体积从 ~120MB 降到 ~5MB
+    exec "git clone --filter=blob:none --no-checkout " & H3仓库 & " " &
+         quoteShell(H3目录)
+    withDir(H3目录):
+      exec "git sparse-checkout init --cone"
+      exec "git sparse-checkout set src/h3lib"
+      writeFile(".sparse-partial", "1")
   withDir(H3目录):
     echo "获取 " & H3版本
     # tag / 分支 / commit 都可以通过下面两条 fetch 拿到
-    exec "git fetch --tags --force origin"
-    exec "git fetch --force origin " & quoteShell(H3版本)
+    exec "git fetch --tags --force --filter=blob:none origin"
+    exec "git fetch --force --filter=blob:none origin " & quoteShell(H3版本)
     exec "git checkout --force --detach " & quoteShell(H3版本)
     echo "已检出版本: " & readFile("VERSION").strip()
 

@@ -47,15 +47,18 @@ nim verify update_bindings.nims
 
 ### 1. 拉取上游源码
 
-在 `h3/`（首次运行时 `git clone`，之后复用）中：
+在 `h3/`（首次运行时创建，之后复用）中执行：
 
 ```bash
-git fetch --tags --force origin
-git fetch --force origin <H3版本>
+git fetch --tags --force --filter=blob:none origin
+git fetch --force --filter=blob:none origin <H3版本>
 git checkout --force --detach <H3版本>
 ```
 
-`H3版本` 既可以是 tag（`v4.6.0`），也可以是 commit（`910f93d5...`）。
+首次克隆使用 **稀疏 + 部分克隆**（`--filter=blob:none --no-checkout`，
+并 `git sparse-checkout set src/h3lib`），只检出必需的 `src/h3lib` 与根目录文件，
+缓存体积约 5MB（完整克隆约 120MB）。`H3版本` 既可以是 tag（`v4.6.0`），
+也可以是 commit（`910f93d5...`）。
 
 ### 2. 同步源码到 `src/h3lib/`
 
@@ -129,8 +132,9 @@ git checkout --force --detach <H3版本>
 
 **Q：`h3/` 需要提交吗？**
 
-不需要。它只是脚本的克隆缓存，已在 `.gitignore` 中忽略。真正随包发布的是
-`src/h3lib/`。
+不需要。它只是脚本的克隆缓存（稀疏部分克隆，约 5MB），已在 `.gitignore`
+中忽略。真正随包发布的是 `src/h3lib/`。若想释放磁盘，删除 `h3/` 即可，
+下次 `nim update` 会重新创建。
 
 **Q：为什么不用 git submodule？**
 
