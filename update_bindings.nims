@@ -17,7 +17,7 @@ const
   ## 当前 vendored 源码对应 v4.5.0-3-g910f93d5（v4.5.0 之后 3 个提交，
   ## 其中 44189b11 增加了 Gosper 边界迭代器）；若要固定到正式发布版，
   ## 改为 "v4.5.0" 即可。升级时把这里改成新版本后运行 update。
-  H3版本 = "910f93d5b3d8a072ba4fa8a49c89ea9cc7982165"
+  H3版本 = "v4.5.0"
 
   H3目录 = thisDir() / "h3"                 # 上游源码克隆缓存（.gitignore）
   H3库目录 = thisDir() / "src" / "h3lib"    # vendored 源码根目录

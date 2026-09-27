@@ -26,7 +26,6 @@ elif defined(macosx) or defined(linux):
 {.compile: currentSourcePath.parentDir / "h3lib" / "lib" / "faceijk.c".}
 {.compile: currentSourcePath.parentDir / "h3lib" / "lib" / "h3Assert.c".}
 {.compile: currentSourcePath.parentDir / "h3lib" / "lib" / "h3Index.c".}
-{.compile: currentSourcePath.parentDir / "h3lib" / "lib" / "iterGosper.c".}
 {.compile: currentSourcePath.parentDir / "h3lib" / "lib" / "iterators.c".}
 {.compile: currentSourcePath.parentDir / "h3lib" / "lib" / "latLng.c".}
 {.compile: currentSourcePath.parentDir / "h3lib" / "lib" / "linkedGeo.c".}
