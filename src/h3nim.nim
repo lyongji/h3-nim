@@ -562,9 +562,12 @@ proc 子级位置转单元*(子级位置: int64, 父级: H3索引, 子级分辨�
 
 # 紧凑 / 解紧凑
 proc 紧凑单元*(单元集: openArray[H3索引]): seq[H3索引] =
+  ## 输出已过滤掉未使用的 `H3空` 槽位。
   if 单元集.len == 0: return @[]
-  result = newSeq[H3索引](单元集.len)
-  检查错误(紧凑单元原(addr 单元集[0], addr result[0], 单元集.len.int64))
+  var 缓冲 = newSeq[H3索引](单元集.len)
+  检查错误(紧凑单元原(addr 单元集[0], addr 缓冲[0], 单元集.len.int64))
+  for 单元 in 缓冲:
+    if 单元 != H3空: result.add 单元
 
 proc 解紧凑单元数*(紧凑集: openArray[H3索引], 分辨率: int): int64 =
   if 紧凑集.len == 0: return 0
