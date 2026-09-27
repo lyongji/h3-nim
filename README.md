@@ -167,29 +167,29 @@ API 完整列表见 [`src/h3nim.nim`](./src/h3nim.nim)。
 
 ## 更新 H3 版本
 
+H3 C 源码已 vendored 到 `src/h3lib/`，不依赖 git submodule，
+`git clone` 与 tarball 安装均可直接使用。升级 / 同步版本统一由
+[`update_bindings.nims`](./update_bindings.nims) 完成：
+
 ```bash
-# H3 C 源码已 vendored 到 src/h3lib/，不再使用 git submodule，
-# 因此从 GitHub 安装 / 下载 tarball 时无需额外拉取。
-# 更新步骤：
-#   1. 从 https://github.com/uber/h3 获取目标版本源码
-#   2. 覆盖 src/h3lib/lib/*.c 与 src/h3lib/include/*.h
-#   3. 从 h3api.h.in 重新生成 src/h3lib/include/h3api.h
-#      并同步版本号：
-#        H3_VERSION_MAJOR / H3_VERSION_MINOR / H3_VERSION_PATCH
-#        MAX_CELL_BNDRY_VERTS（如变化）
-#      如有新增/删除 API，同步更新 src/h3nim.nim
+# 1. 修改 update_bindings.nims 中的 H3版本（git tag 或 commit）
+# 2. 拉取上游源码并同步到 src/h3lib（源码、头文件、编译列表、版本号）
+nim update update_bindings.nims
+
+# 3. 校验（绑定自检 + 单元测试）
+nim verify update_bindings.nims
 ```
 
-### 版本变更检查清单
+其他可选任务：
 
-- [ ] 更新 `src/h3lib/` 下的 vendored C 源码
-- [ ] 更新 `src/h3lib/include/h3api.h`（版本号、新增类型、新增函数声明）
-- [ ] 检查 `src/h3lib/include/` 下新增/修改的 `.h` 文件
-- [ ] 检查 `src/h3lib/lib/` 下新增/删除的 `.c` 文件，同步更新 `{.compile: ...}` 列表
-- [ ] 在 `src/h3nim.nim` 中添加/修改对应中文绑定的 `importc` 声明
-- [ ] 递增 `h3nim.nimble` 版本号
-- [ ] 运行测试 `nim c --path:src -r tests/test_h3nim.nim`
-- [ ] 运行示例确认兼容性
+```bash
+nim sync   update_bindings.nims   # 仅同步版本号与 {.compile:} 列表
+nim header update_bindings.nims   # 仅由 h3api.h.in 重新生成 h3api.h
+nim info   update_bindings.nims   # 查看当前 vendored 版本
+```
+
+完整流程、版本变更检查清单以及新增 / 删除 API 的处理方式见
+[`manual/update_guide.md`](./manual/update_guide.md)。
 
 ## 构建说明
 

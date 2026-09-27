@@ -16,6 +16,7 @@ elif defined(macosx) or defined(linux):
 {.passC: "-I" & currentSourcePath.parentDir / "h3lib" / "include".}
 
 # 注册所有 H3 C 源文件
+# >>> h3lib 编译列表（由 update_bindings.nims 自动生成，请勿手动修改）
 {.compile: currentSourcePath.parentDir / "h3lib" / "lib" / "algos.c".}
 {.compile: currentSourcePath.parentDir / "h3lib" / "lib" / "area.c".}
 {.compile: currentSourcePath.parentDir / "h3lib" / "lib" / "baseCells.c".}
@@ -35,6 +36,7 @@ elif defined(macosx) or defined(linux):
 {.compile: currentSourcePath.parentDir / "h3lib" / "lib" / "polygon.c".}
 {.compile: currentSourcePath.parentDir / "h3lib" / "lib" / "vec2d.c".}
 {.compile: currentSourcePath.parentDir / "h3lib" / "lib" / "vertex.c".}
+# <<< h3lib 编译列表
 
 # ── 基础类型 ──────────────────────────────────────
 
