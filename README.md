@@ -168,25 +168,24 @@ API 完整列表见 [`src/h3nim.nim`](./src/h3nim.nim)。
 ## 更新 H3 版本
 
 ```bash
-# H3 源码位于 h3/ 子目录，是一个独立 git 仓库
-cd h3
-git fetch origin
-git checkout v4.6.0   # 替换为目标版本
-cd ..
-
-# 重新生成 h3api.h（从 h3api.h.in 解析 CMake 变量）
-# 手动编辑 h3/src/h3lib/include/h3api.h 中的版本号：
-#   H3_VERSION_MAJOR / H3_VERSION_MINOR / H3_VERSION_PATCH
-#   MAX_CELL_BNDRY_VERTS（如变化）
-#   如有新增/删除 API，同步更新 src/h3nim.nim
+# H3 C 源码已 vendored 到 src/h3lib/，不再使用 git submodule，
+# 因此从 GitHub 安装 / 下载 tarball 时无需额外拉取。
+# 更新步骤：
+#   1. 从 https://github.com/uber/h3 获取目标版本源码
+#   2. 覆盖 src/h3lib/lib/*.c 与 src/h3lib/include/*.h
+#   3. 从 h3api.h.in 重新生成 src/h3lib/include/h3api.h
+#      并同步版本号：
+#        H3_VERSION_MAJOR / H3_VERSION_MINOR / H3_VERSION_PATCH
+#        MAX_CELL_BNDRY_VERTS（如变化）
+#      如有新增/删除 API，同步更新 src/h3nim.nim
 ```
 
 ### 版本变更检查清单
 
-- [ ] 更新 `h3/` 子目录 C 源码
-- [ ] 更新 `h3/src/h3lib/include/h3api.h`（版本号、新增类型、新增函数声明）
-- [ ] 检查 `h3/src/h3lib/include/` 下新增/修改的 `.h` 文件
-- [ ] 检查 `h3/src/h3lib/lib/` 下新增/删除的 `.c` 文件，同步更新 `{.compile: ...}` 列表
+- [ ] 更新 `src/h3lib/` 下的 vendored C 源码
+- [ ] 更新 `src/h3lib/include/h3api.h`（版本号、新增类型、新增函数声明）
+- [ ] 检查 `src/h3lib/include/` 下新增/修改的 `.h` 文件
+- [ ] 检查 `src/h3lib/lib/` 下新增/删除的 `.c` 文件，同步更新 `{.compile: ...}` 列表
 - [ ] 在 `src/h3nim.nim` 中添加/修改对应中文绑定的 `importc` 声明
 - [ ] 递增 `h3nim.nimble` 版本号
 - [ ] 运行测试 `nim c --path:src -r tests/test_h3nim.nim`
@@ -198,8 +197,7 @@ cd ..
 
 - **Nim** ≥ 2.2.10
 - **C 编译器**（GCC / Clang / MSVC）
-- **git submodule** — `git submodule update --init` 拉取 H3 C 源码
-- **无**外部库依赖 — H3 C 源码随包编译
+- **无**外部库依赖 — H3 C 源码已 vendored 到 `src/h3lib/`，随包一起安装与编译
 
 ### 平台
 

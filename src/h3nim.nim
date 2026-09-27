@@ -13,29 +13,28 @@ when defined(windows):
 elif defined(macosx) or defined(linux):
   {.passL: "-lm".}
 
-{.passC: "-I" & currentSourcePath.parentDir / ".." / "include".}
-{.passC: "-I" & currentSourcePath.parentDir / ".." / "h3" / "src" / "h3lib" / "include".}
+{.passC: "-I" & currentSourcePath.parentDir / "h3lib" / "include".}
 
 # 注册所有 H3 C 源文件
-{.compile: currentSourcePath.parentDir / ".." / "h3" / "src" / "h3lib" / "lib" / "algos.c".}
-{.compile: currentSourcePath.parentDir / ".." / "h3" / "src" / "h3lib" / "lib" / "area.c".}
-{.compile: currentSourcePath.parentDir / ".." / "h3" / "src" / "h3lib" / "lib" / "baseCells.c".}
-{.compile: currentSourcePath.parentDir / ".." / "h3" / "src" / "h3lib" / "lib" / "bbox.c".}
-{.compile: currentSourcePath.parentDir / ".." / "h3" / "src" / "h3lib" / "lib" / "cellsToMultiPoly.c".}
-{.compile: currentSourcePath.parentDir / ".." / "h3" / "src" / "h3lib" / "lib" / "directedEdge.c".}
-{.compile: currentSourcePath.parentDir / ".." / "h3" / "src" / "h3lib" / "lib" / "faceijk.c".}
-{.compile: currentSourcePath.parentDir / ".." / "h3" / "src" / "h3lib" / "lib" / "h3Assert.c".}
-{.compile: currentSourcePath.parentDir / ".." / "h3" / "src" / "h3lib" / "lib" / "h3Index.c".}
-{.compile: currentSourcePath.parentDir / ".." / "h3" / "src" / "h3lib" / "lib" / "iterGosper.c".}
-{.compile: currentSourcePath.parentDir / ".." / "h3" / "src" / "h3lib" / "lib" / "iterators.c".}
-{.compile: currentSourcePath.parentDir / ".." / "h3" / "src" / "h3lib" / "lib" / "latLng.c".}
-{.compile: currentSourcePath.parentDir / ".." / "h3" / "src" / "h3lib" / "lib" / "linkedGeo.c".}
-{.compile: currentSourcePath.parentDir / ".." / "h3" / "src" / "h3lib" / "lib" / "localij.c".}
-{.compile: currentSourcePath.parentDir / ".." / "h3" / "src" / "h3lib" / "lib" / "mathExtensions.c".}
-{.compile: currentSourcePath.parentDir / ".." / "h3" / "src" / "h3lib" / "lib" / "polyfill.c".}
-{.compile: currentSourcePath.parentDir / ".." / "h3" / "src" / "h3lib" / "lib" / "polygon.c".}
-{.compile: currentSourcePath.parentDir / ".." / "h3" / "src" / "h3lib" / "lib" / "vec2d.c".}
-{.compile: currentSourcePath.parentDir / ".." / "h3" / "src" / "h3lib" / "lib" / "vertex.c".}
+{.compile: currentSourcePath.parentDir / "h3lib" / "lib" / "algos.c".}
+{.compile: currentSourcePath.parentDir / "h3lib" / "lib" / "area.c".}
+{.compile: currentSourcePath.parentDir / "h3lib" / "lib" / "baseCells.c".}
+{.compile: currentSourcePath.parentDir / "h3lib" / "lib" / "bbox.c".}
+{.compile: currentSourcePath.parentDir / "h3lib" / "lib" / "cellsToMultiPoly.c".}
+{.compile: currentSourcePath.parentDir / "h3lib" / "lib" / "directedEdge.c".}
+{.compile: currentSourcePath.parentDir / "h3lib" / "lib" / "faceijk.c".}
+{.compile: currentSourcePath.parentDir / "h3lib" / "lib" / "h3Assert.c".}
+{.compile: currentSourcePath.parentDir / "h3lib" / "lib" / "h3Index.c".}
+{.compile: currentSourcePath.parentDir / "h3lib" / "lib" / "iterGosper.c".}
+{.compile: currentSourcePath.parentDir / "h3lib" / "lib" / "iterators.c".}
+{.compile: currentSourcePath.parentDir / "h3lib" / "lib" / "latLng.c".}
+{.compile: currentSourcePath.parentDir / "h3lib" / "lib" / "linkedGeo.c".}
+{.compile: currentSourcePath.parentDir / "h3lib" / "lib" / "localij.c".}
+{.compile: currentSourcePath.parentDir / "h3lib" / "lib" / "mathExtensions.c".}
+{.compile: currentSourcePath.parentDir / "h3lib" / "lib" / "polyfill.c".}
+{.compile: currentSourcePath.parentDir / "h3lib" / "lib" / "polygon.c".}
+{.compile: currentSourcePath.parentDir / "h3lib" / "lib" / "vec2d.c".}
+{.compile: currentSourcePath.parentDir / "h3lib" / "lib" / "vertex.c".}
 
 # ── 基础类型 ──────────────────────────────────────
 
